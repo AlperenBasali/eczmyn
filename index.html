@@ -7,34 +7,80 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <style>
+    
+    .top{
+        display: flex;
+        margin: auto;
+        justify-content: center;
+    }
     .bigBlock{
         display: flex;
     }
+    
     .block{
         width: 50px;
         height: 50px;
         background-color: black;
+        color: white;
         margin: .3rem;
+        padding: .2rem;
+        word-break: break-all;
+        cursor: pointer;
     }
     input{
-        width: 500px;
+        width: 300px;
         height: 50px;
         font-size: 100%;
-        margin: auto;
-        display: flex;
+        
+    }
+    .topBtn{
+        cursor: pointer;
     }
     
 </style>
 <body>
-    
-    <input type="text" placeholder="  Search" >
+<nav>
+    <div class="top">
+    <input id="searchPad" type="text" placeholder="  Search" >
+    <button class="topBtn">Click</button>
+</div>
+</nav>
     <div class="bigBlock mt-2">
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
+        <div class="block">coraspin</div>
+        <div class="block">parol</div>
+        <div class="block">dolven</div>
     </div>
 
 
+<script>
+    const searchPad = document.querySelector("#searchPad")
+   const block = document.querySelectorAll(".block")
+   block.forEach(e => {
+        console.log(e.innerHTML)
+        console.log(searchPad.value)
+        if(e.innerHTML== searchPad.value){
+            console.log("vayyyy")
+            e.style.backgroundColor = "red"; 
+        }
+        else{
+            console.log("D:")
+        }
+        
+        
+   });
+
+   let topBtn = document.querySelector(".topBtn")
+   topBtn.addEventListener("click", function(){
+    location.reload()
+   })
+   
+   searchPad.addEventListener("keydown",function(a){
+    if(a.keyCode === 13){
+        location.reload()
+    }
+
+   })
     
+</script>
 </body>
 </html>
