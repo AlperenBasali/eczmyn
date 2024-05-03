@@ -23,60 +23,29 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <style>
-    
-    .top{
-        display: flex;
-        margin: auto;
-        justify-content: center;
-    }
-    .bigBlock{
-        display: flex;
-    }
-    
-    .block{
-        width: 75px;
-        height: 75px;
-        background-color: black;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: .3rem;
-        padding: .2rem;
-        word-break: break-all;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    input{
-        width: 300px;
-        height: 50px;
-        font-size: 100%;
-        
-    }
-    .topBtn{
-        cursor: pointer;
-    }
-    
 </style>
 <body>
 
 <nav>
     <div class="top">
+    <label for="searchPad">= </label>
     <input id="searchPad" type="text" placeholder="  Search" >
     <button class="topBtn">Click</button>
 </div>
+<span class="list-count"></span>
 </nav>
     <div class="bigBlock mt-2">
         <?php foreach($blocks as $block):?>
         <a href="info.php?id=<?php echo $block['id']; ?>" class="block"><?php echo $block["baslik"] ?></a>
        
         <?php endforeach; ?>
+        <span class="empty-item">no results</span>
     </div>
 
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script>
+<!-- <script>
     const searchPad = document.querySelector("#searchPad")
    const block = document.querySelectorAll(".block")
    block.forEach(e => {
@@ -105,10 +74,44 @@
 
    })
     
-</script>
+</script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script>
 
-   
+$(document).ready(function(){
+
+var jobCount = $('.bigBlock > .block').length;
+$('.list-count').text(jobCount + ' items');
+
+$("#searchPad").keyup(function(){
+
+    var searchTerm = $("#searchPad").val().toLowerCase();
+    var listItem = $('.bigBlock > .block');
+
+    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+    $.extend($.expr[':'], {
+        'containsi': function(elem, i, match, array) {
+            return (elem.textContent || elem.innerText || '').toLowerCase()
+            .indexOf((match[3] || "").toLowerCase()) >= 0;
+        }
+    });
+
+    $(".bigBlock > .block").not(":containsi('" + searchSplit + "')").addClass('hidden');
+    $(".bigBlock > .block:containsi('" + searchSplit + "')").removeClass('hidden');
+
+    var jobCount = $('.bigBlock > .block:not(.hidden)').length;
+    $('.list-count').text(jobCount + ' items');
+
+    // shows empty state text when no jobs found
+    if(jobCount == 0) {
+        $('.bigBlock').addClass('empty');
+    } else {
+        $('.bigBlock').removeClass('empty');
+    }
+});
+});
 
 </script>
 </body>
