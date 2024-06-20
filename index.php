@@ -1,17 +1,32 @@
-<?php   require_once('config.php')?>
 
 <?php 
+require_once('config.php');
 
-    $query = "SELECT * from blocks";
-    $result = mysqli_query($connect, $query);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $baslik = $_POST['baslik'];
+    $aciklama = $_POST['aciklama'];
+    $resim = $_POST['resim'];
+    $sinif = $_POST['sinif'];
 
-    $blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if (!empty($baslik)) {
+        $stmt = $connect->prepare("INSERT INTO blocks (baslik, aciklama, resim, sinif) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $baslik, $aciklama, $resim, $sinif);
 
+        if ($stmt->execute()) {
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+    } else {
+        echo "Block title cannot be empty.";
+    }
+}
 
+$query = "SELECT * from blocks";
+$result = mysqli_query($connect, $query);
+$blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
-
-<!-- ADMİN PANEL EKLENECEK -->
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,97 +37,148 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
-<style>
-</style>
 <body>
 
 <nav>
     <div class="top">
-    <label for="searchPad">= </label>
-    <input id="searchPad" type="text" placeholder="  Search" >
-    <button class="topBtn">Click</button>
-</div>
-<span class="list-count"></span>
-</nav>
-    <div class="bigBlock mt-2">
-        <?php foreach($blocks as $block):?>
-        <a href="info.php?id=<?php echo $block['id']; ?>" class="block"><?php echo $block["baslik"] ?></a>
-       
-        <?php endforeach; ?>
-        <span class="empty-item">no results</span>
+        <label for="searchPad"></label>
+        <input id="searchPad" type="text" placeholder="  Search">
+        <button class="topBtn">Click</button>
     </div>
+    <div class="menu">
+        <ul>
+
+            <li><a href="index.php" id="refreshLink">HEPSİ</a></li>
+            <li><a href="#" data-filter="psikiyatri">PSİKİYATRİ</a></li>
+            <li><a href="#" data-filter="mide">MİDE</a></li>
+            <li><a href="#" data-filter="soguk-alginligi">SOĞUK ALGINLIĞI</a></li>
+            <li><a href="#" data-filter="agri-kesici">AĞRI KESİCİ</a></li>
+            <li><a href="#" data-filter="kas-gevsetici">KAS GEVŞETİCİ</a></li>
+        </ul>
+    </div>
+    <span class="list-count"></span>
+        <!-- Button trigger modal -->
+<button type="button" class="btnEkle btn btn-primary m-auto d-flex mt-2"  data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Ekle
+</button>
+</nav>
+
+<div class="container mt-2">
 
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content p-2">
+     
+        <form action="" method="POST" class="mb-3">
+            <div class="mb-3">
+                <label for="sinif" class="form-label">Class</label>
+                <select id="sinif" class="form-control" name="sinif">
+                    <option value="" disabled selected>Select Class</option>
+                    <option value="agri-kesici">Ağrı Kesici</option>
+                    <option value="soguk-alginligi">Ateş Düşürücü</option>
+                    <option value="kas-gevsetici">Kas Gevşetici</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="baslik" class="form-label">İlaç</label>
+                <input type="text" class="form-control" id="baslik" name="baslik" placeholder="parol" required>
+            </div>
+            <div class="mb-3">
+                <label for="aciklama" class="form-label">Etken Madde</label>
+                <textarea class="form-control" id="aciklama" name="aciklama" rows="3" placeholder="parasetamol"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="resim" class="form-label">Resim Linki</label>
+                <input type="text" class="form-control" id="resim" name="resim" placeholder="https://www.atabay.com/wp-content/uploads/2020/04/parol-500-3-Kopya-scaled.jpg">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Block</button>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="bigBlock row row-cols-12 ">
+    <?php foreach ($blocks as $block): ?>
+        <div class="block-item col" data-class="<?php echo htmlspecialchars($block['sinif']); ?>">
+            <a href="info.php?id=<?php echo $block['id']; ?>" class="block">
+                <?php echo htmlspecialchars($block["baslik"]); ?>
+            </a>
+        </div>
+    <?php endforeach; ?>
+    <span class="empty-item">no results</span>
+</div>
+
+</div>
+    
+</body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<!-- <script>
-    const searchPad = document.querySelector("#searchPad")
-   const block = document.querySelectorAll(".block")
-   block.forEach(e => {
-        console.log(e.innerHTML)
-        console.log(searchPad.value)
-        if(e.innerHTML.toLowerCase()== searchPad.value.toLowerCase()){
-            console.log("vayyyy")
-            e.style.backgroundColor = "red"; 
-        }
-        else{
-            console.log("D:")
-        }
-        
-        
-   });
-
-   let topBtn = document.querySelector(".topBtn")
-   topBtn.addEventListener("click", function(){
-    location.reload()
-   })
-   
-   searchPad.addEventListener("keydown",function(a){
-    if(a.keyCode === 13){
-        location.reload()
-    }
-
-   })
-    
-</script> -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
 <script>
 
-$(document).ready(function(){
 
-var jobCount = $('.bigBlock > .block').length;
-$('.list-count').text(jobCount + ' items');
+document.getElementById('refreshLink').addEventListener('click', function(e) {
+            e.preventDefault(); // Varsayılan link davranışını engelle
+            location.reload(); // Sayfayı yeniden yükle
+        });
+    
 
-$("#searchPad").keyup(function(){
 
-    var searchTerm = $("#searchPad").val().toLowerCase();
-    var listItem = $('.bigBlock > .block');
+$(document).ready(function() {
+    var jobCount = $('.bigBlock > .block-item').length;
+    $('.list-count').text(jobCount + ' items');
 
-    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+    $("#searchPad").keyup(function() {
+        var searchTerm = $("#searchPad").val().toLowerCase();
+        var listItem = $('.bigBlock > .block-item');
+        var searchSplit = searchTerm.replace(/ /g, "'):containsi('");
 
-    $.extend($.expr[':'], {
-        'containsi': function(elem, i, match, array) {
-            return (elem.textContent || elem.innerText || '').toLowerCase()
-            .indexOf((match[3] || "").toLowerCase()) >= 0;
+        $.extend($.expr[':'], {
+            'containsi': function(elem, i, match, array) {
+                return (elem.textContent || elem.innerText || '').toLowerCase()
+                .indexOf((match[3] || "").toLowerCase()) >= 0;
+            }
+        });
+
+        $(".bigBlock > .block-item").not(":containsi('" + searchSplit + "')").addClass('hidden');
+        $(".bigBlock > .block-item:containsi('" + searchSplit + "')").removeClass('hidden');
+
+        var jobCount = $('.bigBlock > .block-item:not(.hidden)').length;
+        $('.list-count').text(jobCount + ' items');
+
+        if (jobCount == 0) {
+            $('.bigBlock').addClass('empty');
+        } else {
+            $('.bigBlock').removeClass('empty');
         }
     });
 
-    $(".bigBlock > .block").not(":containsi('" + searchSplit + "')").addClass('hidden');
-    $(".bigBlock > .block:containsi('" + searchSplit + "')").removeClass('hidden');
+    // Filter by class
+    $('.menu a').click(function(e) {
+        e.preventDefault();
+        var filter = $(this).data('filter');
 
-    var jobCount = $('.bigBlock > .block:not(.hidden)').length;
-    $('.list-count').text(jobCount + ' items');
+        $('.bigBlock > .block-item').each(function() {
+            var itemClass = $(this).data('class');
+            if (itemClass === filter) {
+                $(this).removeClass('hidden');
+            } else {
+                $(this).addClass('hidden');
+            }
+        });
 
-    // shows empty state text when no jobs found
-    if(jobCount == 0) {
-        $('.bigBlock').addClass('empty');
-    } else {
-        $('.bigBlock').removeClass('empty');
-    }
+        var jobCount = $('.bigBlock > .block-item:not(.hidden)').length;
+        $('.list-count').text(jobCount + ' items');
+
+        if (jobCount == 0) {
+            $('.bigBlock').addClass('empty');
+        } else {
+            $('.bigBlock').removeClass('empty');
+        }
+    });
 });
-});
-
 </script>
-</body>
+
 </html>

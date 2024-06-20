@@ -1,3 +1,12 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body{
+  background-color: gray;
+}
+
 .top{
     display: flex;
     margin: auto;
@@ -20,6 +29,7 @@
     word-break: break-all;
     text-decoration: none;
     cursor: pointer;
+    border-radius: 10%;
 }
 input{
     width: 300px;
@@ -31,10 +41,24 @@ input{
     cursor: pointer;
 }
 .list-count {
-    background-color: red;
+    background-color: rgb(1, 51, 1);
     width:30%;
     padding:0.5em;
-    color:blue;
+    color:white;
+    display: flex;
+    width: 120px;
+    margin: auto;
+    justify-content: center;
+  }
+  .btnEkle{
+    background-color: rgb(1, 51, 1);
+    width:30%;
+    padding:0.5em;
+    color:white;
+    display: flex;
+    width: 120px;
+    margin: auto;
+    justify-content: center;
   }
 
 .hidden{
@@ -62,7 +86,29 @@ input{
     visibility:visible;
   }
   
-  
+  .menu ul{
+    display: flex;
+  }
+  .menu ul li{
+    list-style: none;
+    text-decoration: none;
+    margin: auto;
+
+  }
+  .menu ul li a{
+    list-style: none;
+    text-decoration: none;
+    color: black;
+    
+
+  }
+  .menu ul li{
+    list-style: none;
+    margin-left: 15px;
+    
+
+  }
+  /* body{display: none;} */
 
 
 
