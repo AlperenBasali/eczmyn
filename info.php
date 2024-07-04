@@ -37,7 +37,7 @@
 <div class="card m-auto mt-5 " style="width: 36rem;">
   <img src=" <?php echo $block_info["resim"]?> " class="card-img-top" alt="Yüklenemedi">
   <div class="card-body">
-    <h5 class="card-title"><?php echo $block_info["baslik"] ?></h5>
+    <h5 class="card-title"><?php echo $block_info["baslik"] ?> (<?php echo $block_info["sinif"]?>)</h5>
     <p class="card-text"><?php echo $block_info["aciklama"] ?></p>
     <a href="#" class="btn btn-primary edit-btn">Edit</a>
     <a href="#" class="btn btn-danger delete-btn">Delete</a>

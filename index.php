@@ -93,7 +93,7 @@ $blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 <label for="resim" class="form-label">Resim Linki</label>
                 <input type="text" class="form-control" id="resim" name="resim" placeholder="https://www.atabay.com/wp-content/uploads/2020/04/parol-500-3-Kopya-scaled.jpg">
             </div>
-            <button type="submit" class="btn btn-primary">Add Block</button>
+            <button type="submit" class="btn btn-primary">Ekle</button>
         </form>
     </div>
   </div>
@@ -101,11 +101,12 @@ $blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 <div class="bigBlock row row-cols-12 ">
     <?php foreach ($blocks as $block): ?>
-        <div class="block-item col" data-class="<?php echo htmlspecialchars($block['sinif']); ?>">
-            <a href="info.php?id=<?php echo $block['id']; ?>" class="block">
-                <?php echo htmlspecialchars($block["baslik"]); ?>
-            </a>
-        </div>
+        <div class="block-item col" data-class="<?php echo htmlspecialchars($block['sinif']); ?>" data-description="<?php echo htmlspecialchars($block['aciklama']); ?>">
+    <a href="info.php?id=<?php echo $block['id']; ?>" class="block">
+        <?php echo htmlspecialchars($block["baslik"]); ?>
+    </a>
+</div>
+
     <?php endforeach; ?>
     <span class="empty-item">no results</span>
 </div>
@@ -126,14 +127,12 @@ document.getElementById('refreshLink').addEventListener('click', function(e) {
     
 
 
-$(document).ready(function() {
+        $(document).ready(function() {
     var jobCount = $('.bigBlock > .block-item').length;
     $('.list-count').text(jobCount + ' items');
 
     $("#searchPad").keyup(function() {
         var searchTerm = $("#searchPad").val().toLowerCase();
-        var listItem = $('.bigBlock > .block-item');
-        var searchSplit = searchTerm.replace(/ /g, "'):containsi('");
 
         $.extend($.expr[':'], {
             'containsi': function(elem, i, match, array) {
@@ -142,10 +141,28 @@ $(document).ready(function() {
             }
         });
 
-        $(".bigBlock > .block-item").not(":containsi('" + searchSplit + "')").addClass('hidden');
-        $(".bigBlock > .block-item:containsi('" + searchSplit + "')").removeClass('hidden');
+        $(".bigBlock > .block-item").each(function() {
+            var title = $(this).find('.block').text().toLowerCase();
+            var description = $(this).data('description').toLowerCase();
 
-        var jobCount = $('.bigBlock > .block-item:not(.hidden)').length;
+            if (title.indexOf(searchTerm) >= 0 && description.indexOf(searchTerm) >= 0) {
+                $(this).find('.block').css('background-color', 'purple'); // Both match
+            } else if (title.indexOf(searchTerm) >= 0) {
+                $(this).find('.block').css('background-color', 'blue'); // Title match
+            } else if (description.indexOf(searchTerm) >= 0) {
+                $(this).find('.block').css('background-color', 'red'); // Description match
+            } else {
+                $(this).find('.block').css('background-color', ''); // Reset to default background
+            }
+        });
+
+
+        // Sayacı güncelle
+        var jobCount = $('.bigBlock > .block-item').filter(function() {
+            var title = $(this).find('.block').text().toLowerCase();
+            var description = $(this).data('description').toLowerCase();
+            return title.indexOf(searchTerm) >= 0 || description.indexOf(searchTerm) >= 0;
+        }).length;
         $('.list-count').text(jobCount + ' items');
 
         if (jobCount == 0) {
@@ -154,6 +171,7 @@ $(document).ready(function() {
             $('.bigBlock').removeClass('empty');
         }
     });
+
 
     // Filter by class
     $('.menu a').click(function(e) {
