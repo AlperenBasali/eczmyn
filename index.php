@@ -1,4 +1,5 @@
-
+<!-- vitamin sınıflarını vitamin-demir olarak değiştir -->
+<!-- blokların yernini değiştirmeyi öğren -->
 <?php 
 require_once('config.php');
 
@@ -49,6 +50,15 @@ $blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
         <ul>
 
             <li><a href="index.php" id="refreshLink">HEPSİ</a></li>
+            <li><a href="#" data-filter="göz-damla">GÖZ-DAMLA</a></li>
+            <li><a href="#" data-filter="burun-sprey">BURUN-SPREY</a></li>
+            <li><a href="#" data-filter="kan-sulandirici">KAN-SULANDIRICI</a></li>
+            <li><a href="#" data-filter="vitamin-demir">VİTAMİN-DEMİR</a></li>
+            <li><a href="#" data-filter="prostat">PROSTAT</a></li>
+            <li><a href="#" data-filter="kadin-dogum">KADIN-DOĞUM</a></li>
+            <li><a href="#" data-filter="tansiyon">TANSİYON</a></li>
+            <li><a href="#" data-filter="kolestrol">KOLESTROL</a></li>
+            <li><a href="#" data-filter="antibiyotik">ANTİBİYOTİK</a></li>
             <li><a href="#" data-filter="psikiyatri">PSİKİYATRİ</a></li>
             <li><a href="#" data-filter="mide">MİDE</a></li>
             <li><a href="#" data-filter="soguk-alginligi">SOĞUK ALGINLIĞI</a></li>
@@ -76,9 +86,20 @@ $blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 <label for="sinif" class="form-label">Class</label>
                 <select id="sinif" class="form-control" name="sinif">
                     <option value="" disabled selected>Select Class</option>
+                    <option value="göz-damla">Göz Damla</option>
+                    <option value="burun-sprey">Burun Sprey</option>
+                    <option value="kan-sulandirici">Kan Sulandırıcı</option>
+                    <option value="vitamin-demir">Vitamin-Demir</option>
+                    <option value="prostat">Prostat</option>
+                    <option value="kadin-dogum">Kadın Doğum</option>
+                    <option value="tansiyon">Tansiyon</option>
+                    <option value="kolestrol">Kolestrol</option>
+                    <option value="antibiyotik">Antibiyotik</option>
                     <option value="agri-kesici">Ağrı Kesici</option>
                     <option value="soguk-alginligi">Ateş Düşürücü</option>
                     <option value="kas-gevsetici">Kas Gevşetici</option>
+                    <option value="mide">Mide</option>
+                    <option value="psikiyatri">Psikiyatri</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -146,7 +167,7 @@ document.getElementById('refreshLink').addEventListener('click', function(e) {
             var description = $(this).data('description').toLowerCase();
 
             if (title.indexOf(searchTerm) >= 0 && description.indexOf(searchTerm) >= 0) {
-                $(this).find('.block').css('background-color', 'purple'); // Both match
+                $(this).find('.block').css('background-color', 'black'); // Both match
             } else if (title.indexOf(searchTerm) >= 0) {
                 $(this).find('.block').css('background-color', 'blue'); // Title match
             } else if (description.indexOf(searchTerm) >= 0) {
