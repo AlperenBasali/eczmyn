@@ -64,6 +64,9 @@ input{
 .hidden{
     display: none;
 }
+.hiddenV{
+  visibility: hidden;
+}
 
 
 .empty-item {

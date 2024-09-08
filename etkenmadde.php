@@ -55,6 +55,23 @@ $blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 </head>
+<style>
+    .block{
+    width: 150px;
+    height: 150px;
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: .3rem;
+    padding: .2rem;
+    word-break: break-all;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 10%;
+}
+</style>
 <body>
 
 <nav>
@@ -63,7 +80,8 @@ $blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
         <input id="searchPad" type="text" placeholder="  Search">
         
     </div>
-    <div class="menu">
+
+    <div class="menu visually-hidden">
         <ul>
             <li><a href="index.php" id="refreshLink">HEPSİ</a></li>
             <li><a href="#" data-filter="göz-damla">GÖZ-DAMLA</a></li>
@@ -82,13 +100,15 @@ $blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
             <li><a href="#" data-filter="kas-gevsetici">KAS GEVŞETİCİ</a></li>
         </ul>
     </div>
-    <span class="list-count "></span>
+    <span class="list-count"></span>
+   
         <!-- Button trigger modal -->
-    <button type="button" class="btnEkle btn btn-primary m-auto d-flex mt-2"  data-bs-toggle="modal" data-bs-target="#exampleModal">
-      Ekle
-    </button>
+   
+    <!-- <button type="button" class="btnEkle btn btn-primary m-auto d-flex mt-2"  data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Etken madde
+    </button> -->
     <div class="d-flex">
-        <a class="btn btn-secondary m-auto mt-2" href="etkenmadde.php">ETKEN MADDE</a>
+        <a class="btn btn-secondary m-auto mt-2" href="index.php">ANASAYFA</a>
 
     </div>
 </nav>
@@ -144,7 +164,7 @@ $blocks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         <div class="block-item col <?php echo $isHiddenClass; ?> " data-id="<?php echo $block['id']; ?>" data-class="<?php echo htmlspecialchars($block['sinif']); ?>" data-description="<?php echo htmlspecialchars($block['aciklama']); ?>" data-position="<?php echo $block['position']; ?>">
     <a href="info.php?id=<?php echo $block['id']; ?>" class="block">
-        <?php echo htmlspecialchars($block["baslik"]); ?>
+        <?php echo htmlspecialchars($block["aciklama"]); ?>
     </a>
 </div>
     <?php endforeach; ?>
